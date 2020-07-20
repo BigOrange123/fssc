@@ -38,35 +38,37 @@ def httpRequest():
                 resp = requests.post(url=f'{configure.path}{action}',
                               data=params,
                               headers={'Content-Type': headersFormat, 'token': token})
-                # 调用断言函数
-                result = common.getAssert(expect=expect, actual=resp.json()['message'])
-                # 获取请求响应耗时
-                rTime = resp.elapsed.total_seconds()
-                # 回写测试结果
-                common.getWriteExcel(copySheet=copySheet, row=row, actual=resp.json()['message'], result=result, rTime=rTime)
+                # 调用三合一函数
+                assert_rTime_backWrite(expect, resp, row, copySheet)
             elif headersFormat == 'application/json': # json格式
                 resp = requests.post(url=f'{configure.path}{action}',
                               json=params,
                               headers={'Content-Type': headersFormat, 'token': token})
-                # 调用断言函数
-                result = common.getAssert(expect=expect, actual=resp.json()['message'])
-                # 获取请求响应耗时
-                rTime = resp.elapsed.total_seconds()
-                # 回写测试结果
-                common.getWriteExcel(copySheet=copySheet, row=row, actual=resp.json()['message'], result=result, rTime=rTime)
+                # 调用三合一函数
+                assert_rTime_backWrite(expect, resp, row, copySheet)
         elif method == 'GET':
             resp = requests.get(url=f'{configure.path}{action}',
                          params=params,
                          headers={'token': token})
-            # 调用断言函数
-            result = common.getAssert(expect=expect, actual=resp.json()['message'])
-            # 获取请求响应耗时
-            rTime = resp.elapsed.total_seconds()
-            # 回写测试结果
-            common.getWriteExcel(copySheet=copySheet, row=row, actual=resp.json()['message'], result=result, rTime=rTime)
+            # 调用三合一函数
+            assert_rTime_backWrite(expect, resp, row, copySheet)
         # except:
         #     print('系统异常')
     # 调用生成测试结果函数
     common.getResultExcel(copyWorkBook=copyWorkBook)
 
+'''
+    @Author:Mr. Jiang    
+    @Date:2020/7/20 17:37
+    @Desc:断言+耗时+测试结果回写 三合一函数
+'''
+def assert_rTime_backWrite(expect,resp,row,copySheet):
+    # 调用断言函数
+    result = common.getAssert(expect=expect, actual=resp.json()['message'])
+    # 获取请求响应耗时
+    rTime = resp.elapsed.total_seconds()
+    # 回写测试结果
+    common.getWriteExcel(copySheet=copySheet, row=row, actual=resp.json()['message'], result=result, rTime=rTime)
+
+# 调用执行用例入口函数
 httpRequest()
