@@ -32,7 +32,8 @@ def getToken():
     @Desc:读excel并返回:workBook, rowObjectList(行数据集合)
 '''
 def getReadExcel():
-    workBook = xlrd.open_workbook(f'{configure.excelPath}.xlsx') # 获取excel对象
+    # 获取excel对象
+    workBook = xlrd.open_workbook(f'{configure.excelPath}.xls', formatting_info=True) # formatting_info=True让打开excel保持现有格式，不支持xlsx格式
     workSheet = workBook.sheet_by_index(0) # 获取第一个sheet对象
     # 循环获取excel中数据值
     nrows = workSheet.nrows # 获取行数
@@ -50,7 +51,7 @@ def getReadExcel():
 def getCopysheet(workBook):
     # 复制表
     copyWorkBook = copy(workBook)
-    # 获取sheet对象
+    # 获取复制表sheet对象
     copySheet = copyWorkBook.get_sheet(0)
     return copyWorkBook, copySheet
 
@@ -70,7 +71,7 @@ def getCopysheet(workBook):
 def getResultExcel(copyWorkBook):
     timeTuple = time.localtime()
     loaclTime = time.strftime("%Y%m%d", timeTuple)
-    copyWorkBook.save(f'{configure.excelPath}-result-{loaclTime}.xlsx')
+    copyWorkBook.save(f'{configure.excelPath}-result-{loaclTime}.xls')
 
 '''
     @Author:Mr. Jiang    
@@ -82,7 +83,7 @@ def getWriteExcel(copySheet, row, actual, result, rTime):
     copySheet.write(row, 8, result)
     copySheet.write(row, 9, rTime)
 
-'''    
+'''
     @Author:Mr. Jiang    
     @Date:2020/7/17 16:19
     @Desc:断言函数
