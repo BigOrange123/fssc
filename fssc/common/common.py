@@ -8,22 +8,32 @@
 @Desc   ：
 ==================================================
 '''
-from fssc.configure import configure
+from fssc.configure import excelConfig
 import requests
 import xlrd, xlwt
 from xlutils.copy import copy
 import time
 import os
 import pprint
+from fssc.configure import loggingConfig
+import logging.config
+
+logging.config.dictConfig(loggingConfig.loggingDic) # 加载loggingConfig文件
+'''
+    @Author:Mr. Jiang    
+    @Date:2020/7/21 14:58
+    @Desc:获取logger
+'''
+def getLogger(name):
+    return logging.getLogger(name)
+
 '''    
     @Author:Mr. Jiang    
     @Date:2020/7/17 14:10
     @Desc:获取token
 '''
-def getToken():
-    resp = requests.post(url=f'{configure.path}/sysLogin/login',
-                          data={'userAccount': 'yangxun', 'password': 'YWRtaW4='},
-                          headers={'Content-Type': 'application/x-www-form-urlencoded'})
+def getToken(url, data, headers):
+    resp = requests.post(url, data, headers)
     return resp.json()['data']['token']
 
 '''
@@ -31,9 +41,9 @@ def getToken():
     @Date:2020/7/17 14:29
     @Desc:读excel并返回:workBook, rowObjectList(行数据集合)
 '''
-def getReadExcel():
+def getReadExcel(excelPath):
     # 获取excel对象
-    workBook = xlrd.open_workbook(f'{configure.excelPath}.xls', formatting_info=True) # formatting_info=True让打开excel保持现有格式，不支持xlsx格式
+    workBook = xlrd.open_workbook(excelPath, formatting_info=True) # formatting_info=True让打开excel保持现有格式，不支持xlsx格式
     workSheet = workBook.sheet_by_index(0) # 获取第一个sheet对象
     # 循环获取excel中数据值
     nrows = workSheet.nrows # 获取行数
@@ -70,8 +80,8 @@ def getCopysheet(workBook):
 
 def getResultExcel(copyWorkBook):
     timeTuple = time.localtime()
-    loaclTime = time.strftime("%Y%m%d", timeTuple)
-    copyWorkBook.save(f'{configure.excelPath}-result-{loaclTime}.xls')
+    localDate = time.strftime("%Y%m%d", timeTuple)
+    copyWorkBook.save(f'{excelConfig.excelPath}-result-{localDate}.xls')
 
 '''
     @Author:Mr. Jiang    

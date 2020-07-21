@@ -10,9 +10,10 @@
 '''
 from fssc.common import common
 import requests
-from fssc.configure import configure
+from fssc.configure import excelConfig
 import pprint
 import json
+
 '''    
     @Author:Mr. Jiang    
     @Date:2020/7/17 15:23
@@ -20,8 +21,19 @@ import json
 '''
 def httpRequest():
     # 调用获取token函数
-    token = common.getToken()
-    workBook, rowObjectList = common.getReadExcel() # 获取行数据集合
+    token = common.getToken(
+        url=f'{excelConfig.requestPath}/sysLogin/login',
+        data={'userAccount': 'yangxun', 'password': 'YWRtaW4='},
+        headers={'Content-Type': 'application/x-www-form-urlencoded'}
+    )
+    workBook, rowObjectList = common.getReadExcel(excelPath=f'{excelConfig.excelPath}.xls') # 获取行数据集合
+    # 日子记录读取excel表数据
+    logger = common.getLogger('root') # 获取logger
+    logger.info(rowObjectList) # 通过logger来记录日志
+    # logger.debug(rowObjectList)
+    # logger.error(rowObjectList)
+    # logger.warning(rowObjectList)
+    # logger.critical(rowObjectList)
     copyWorkBook, copySheet = common.getCopysheet(workBook)
     row = 0
     # 循环调用请求执行用例
@@ -35,21 +47,24 @@ def httpRequest():
         # try:
         if method == 'POST':
             if headersFormat == 'application/x-www-form-urlencoded': # form表单格式
-                resp = requests.post(url=f'{configure.path}{action}',
-                              data=params,
-                              headers={'Content-Type': headersFormat, 'token': token})
+                resp = requests.post(
+                    url=f'{excelConfig.requestPath}{action}',
+                    data=params,
+                    headers={'Content-Type': headersFormat, 'token': token})
                 # 调用三合一函数
                 assert_rTime_backWrite(expect, resp, row, copySheet)
             elif headersFormat == 'application/json': # json格式
-                resp = requests.post(url=f'{configure.path}{action}',
-                              json=params,
-                              headers={'Content-Type': headersFormat, 'token': token})
+                resp = requests.post(
+                    url=f'{excelConfig.requestPath}{action}',
+                    json=params,
+                    headers={'Content-Type': headersFormat, 'token': token})
                 # 调用三合一函数
                 assert_rTime_backWrite(expect, resp, row, copySheet)
         elif method == 'GET':
-            resp = requests.get(url=f'{configure.path}{action}',
-                         params=params,
-                         headers={'token': token})
+            resp = requests.get(
+                url=f'{excelConfig.requestPath}{action}',
+                params=params,
+                headers={'token': token})
             # 调用三合一函数
             assert_rTime_backWrite(expect, resp, row, copySheet)
         # except:
