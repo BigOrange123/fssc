@@ -25,7 +25,8 @@ logging.config.dictConfig(loggingConfig.loggingDic) # 加载loggingConfig文件
     @Desc:获取logger
 '''
 def getLogger(name):
-    return logging.getLogger(name)
+    logger = logging.getLogger(name)
+    return logger
 
 '''    
     @Author:Mr. Jiang    
