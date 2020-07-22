@@ -81,7 +81,11 @@ def getCopysheet(workBook):
 def getResultExcel(copyWorkBook):
     timeTuple = time.localtime()
     localDate = time.strftime("%Y%m%d", timeTuple)
-    copyWorkBook.save(f'{excelConfig.excelPath}-result-{localDate}.xls')
+    if os.path.exists(f'{excelConfig.excelPath}-result-{localDate}.xls'): # 判断result表是否存在
+        os.remove(f'{excelConfig.excelPath}-result-{localDate}.xls')
+        copyWorkBook.save(f'{excelConfig.excelPath}-result-{localDate}.xls')
+    else:
+        copyWorkBook.save(f'{excelConfig.excelPath}-result-{localDate}.xls')
 
 '''
     @Author:Mr. Jiang    
