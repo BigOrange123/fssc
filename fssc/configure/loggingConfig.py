@@ -30,6 +30,11 @@ localDate = time.strftime("%Y%m%d", timeTuple)
 #     )
 #     logging.debug(msg)
 
+'''
+    @Author:Mr. Jiang    
+    @Date:2020/7/22 15:54
+    @Desc:配置日志logging字典
+'''
 loggingDic = {
     "version": 1,
     # "disable_existing_loggers": False,
