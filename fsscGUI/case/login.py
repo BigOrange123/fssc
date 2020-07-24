@@ -43,7 +43,7 @@ class loginTestCase(unittest.TestCase):
         # password.send_keys("admin")
         # loginBtn = common.findElement(driver=self.driver, method="css", value=".el-button.el-button--primary")
         # loginBtn.click()
-        # self.assertEqual(True, False)
+
 
 
 if __name__ == '__main__':
